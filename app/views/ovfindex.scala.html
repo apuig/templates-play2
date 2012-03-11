@@ -1,0 +1,29 @@
+@(templates: List[Template])
+
+@main {
+
+
+<?xml version='1.0' encoding='UTF-8'?>
+<ns2:RepositorySpace xmlns:ns5="http://schemas.dmtf.org/wbem/wscim/1/common"
+	xmlns:ns4="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData"
+	xmlns:ns3="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_VirtualSystemSettingData"
+	xmlns:ns2="http://www.abiquo.com/appliancemanager/repositoryspace" xmlns:ns1="http://schemas.dmtf.org/ovf/envelope/1"
+
+	ns2:RepositoryURI="@routes.Application.ovfindex()"
+	ns2:RepositoryName="play2repo">
+
+	@for(template <- templates) {
+	 <ns2:OVFDescription 			
+				ns2:OVFFile="@routes.Application.ovfdocument(template.id)"
+				ns2:DiskFormat="@template.diskFormatType"
+				ns2:DiskSize="@template.diskFileSize"
+				ns2:OVFCategories="@template.category.name" 
+                ns1:instance="" ns1:class="">
+                
+                <ns1:Product>@template.name</ns1:Product>
+                <ns1:Info>@template.description</ns1:Info>
+				<ns1:Icon ns1:fileRef="@template.iconPath" ns1:mimeType="image/jpeg" ns1:width="32" ns1:height="32" />
+        </ns2:OVFDescription>
+	}
+</ns2:RepositorySpace>
+}

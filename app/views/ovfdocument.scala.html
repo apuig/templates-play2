@@ -1,0 +1,71 @@
+@(template: Template)
+
+@main {
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:vssd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_VirtualSystemSettingData"
+    xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData"
+    xmlns:ovf="http://schemas.dmtf.org/ovf/envelope/1"
+    xmlns="http://schemas.dmtf.org/ovf/envelope/1">
+
+	<References>
+		<File ovf:href="@template.diskFilePath" 
+		ovf:id="file1" ovf:size="@template.diskFileSize" />		
+	</References>
+	
+	<DiskSection>
+		<Info>List of Virtual Disks</Info>
+		<Disk 
+			ovf:fileRef="file1"
+			ovf:diskId="disk1" 
+			ovf:capacity="@template.hd * 1024 * 1024"
+			ovf:format="@template.diskFormatType.url" />
+	</DiskSection>
+	
+	
+	<VirtualSystem ovf:id="@template.name">
+		<ProductSection>
+	    	<Info>@template.description</Info>
+            <Product>@template.name</Product>
+            <Icon ovf:fileRef="@template.iconPath" ovf:mimeType="image/jpeg" ovf:width="32" ovf:height="32" />        
+       	</ProductSection>
+	
+		<VirtualHardwareSection>
+			<System>
+				<vssd:VirtualSystemType>abiquo</vssd:VirtualSystemType>
+			</System>
+			<Item>
+				<rasd:Caption>Harddisk 0</rasd:Caption>
+				<rasd:InstanceId>11</rasd:InstanceId>
+				<rasd:ResourceType>17</rasd:ResourceType>
+				<rasd:HostResource>ovf:/disk/disk1</rasd:HostResource>
+			</Item>
+			<Item>
+				<rasd:Caption>@template.cpu virtual CPUs</rasd:Caption>
+				<rasd:Description>Number of virtual CPUs</rasd:Description>
+				<rasd:InstanceId>1</rasd:InstanceId>
+				<rasd:ResourceType>3</rasd:ResourceType>
+				<rasd:VirtualQuantity>@template.cpu</rasd:VirtualQuantity>
+			</Item>
+			<Item>
+				<rasd:Caption>@template.ram Mb of memory RAM</rasd:Caption>
+				<rasd:Description>Memory Size</rasd:Description>
+				<rasd:InstanceId>2</rasd:InstanceId>
+				<rasd:ResourceType>4</rasd:ResourceType>
+				<rasd:AllocationUnits>Mb</rasd:AllocationUnits>
+				<rasd:VirtualQuantity>@template.ram</rasd:VirtualQuantity>
+			</Item>
+			<Item>
+				<rasd:Caption>vNic Driver @template.ethernetDriver</rasd:Caption>
+				<rasd:Description>Ethernet Adapter</rasd:Description>
+				<rasd:InstanceId>3</rasd:InstanceId>
+				<rasd:ResourceType>10</rasd:ResourceType>
+				<rasd:Connection>bridged</rasd:Connection>
+				<rasd:ResourceSubType>@template.ethernetDriver</rasd:ResourceSubType>
+			</Item>			
+		</VirtualHardwareSection>
+	</VirtualSystem>
+</Envelope>
+
+}

@@ -1,0 +1,62 @@
+@(id: Long, templateForm: Form[Template])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main {
+    
+    <h1>Edit template</h1>
+    
+    @form(routes.Application.update(id)) {
+        
+
+
+        <fieldset>
+            @inputText(templateForm("diskFilePath"), '_label -> "URL to disk file")
+            @select(
+                templateForm("diskFormatType"), 
+                options(Template.DiskFormatType.options()), 
+                '_label -> "Disk Format Type",
+                '_showConstraints -> false
+            )
+        </fieldset>   
+            
+    <div class="row container">
+        <div class="span6">
+            <fieldset>
+            @inputText(templateForm("name"), '_label -> "Template name")
+            @inputText(templateForm("iconPath"), '_label -> "icon URL")
+            @inputText(templateForm("categoryName"), '_label -> "Category", '_help -> "coma separated categories")
+            @textarea(
+                templateForm("description"), 
+                '_label -> "Description", 'cols -> 20
+            )
+            </fieldset>
+        </div>
+        <div class="span6">
+            <fieldset>
+            @inputText(templateForm("cpu"), '_label -> "CPU", '_help -> "default 1")
+            @inputText(templateForm("ram"), '_label -> "RAM", '_help -> "MB, default 512")
+            @select(
+                templateForm("ethernetDriver"), 
+                options(Template.EthernetDriver.options()), 
+                '_label -> "Ethernet",
+                '_showConstraints -> false
+            )
+            </fieldset>
+        </div>
+    </div>
+        
+        <div class="actions">
+            <input type="submit" value="Save" class="btn primary"> or 
+            <a href="@routes.Application.list()" class="btn">Cancel</a> 
+        </div>
+        
+    }
+    
+    @form(routes.Application.delete(id), 'class -> "topRight") {
+        <input type="submit" value="Delete" class="btn danger">
+    }
+    
+}
